@@ -6,24 +6,21 @@ using UnityEngine.XR.ARSubsystems;
 
 public class PlaneDetect : MonoBehaviour
 {
-    public ARPlaneManager planeManager;
+    [SerializeField] ARPlaneManager planeManager;
+    [SerializeField] ARRaycastManager raycastManager;
 
-    public GameObject myCube;
+    List<ARRaycastHit> m_Hits = new List<ARRaycastHit>();
 
-    bool cubeSpawned = false;
-
-    void Start() {
-        
-    }
+    [SerializeField] GameObject objectTracker;
 
     void Update() {
-        foreach (ARPlane plane in planeManager.trackables) {
-            if(plane.alignment == PlaneAlignment.HorizontalUp) {
-                if (!cubeSpawned) {
-                    cubeSpawned = true;
-                    Instantiate(myCube, plane.transform.position, Quaternion.identity);
-                }
-            }
+        // Get current center position
+        // If Colliding with plane, spawn/move cube
+        if (raycastManager.Raycast(new Vector2(Screen.width/2, Screen.height/2), m_Hits, TrackableType.PlaneWithinPolygon)) {
+            objectTracker.SetActive(true);
+            objectTracker.transform.position = m_Hits[0].pose.position;
+        } else {
+            objectTracker.SetActive(false);
         }
     }
 }
