@@ -12,7 +12,7 @@ public class LVL_0 : GameLevel
 
     List<ARRaycastHit> m_Hits = new List<ARRaycastHit>();
 
-    private void Update() {
+    protected override void Update() {
         UpdateTrackerPosition();
         CheckTrackerPlacement();
     }
@@ -30,16 +30,15 @@ public class LVL_0 : GameLevel
         if(pillar.activeInHierarchy && UserInteraction()) {
             planeManager.SetTrackablesActive(false);
             planeManager.enabled = false;
+            raycastManager.enabled = false;
             pillarPosition.transform.position =
                 pillar.transform.position;
             lvlManager.LoadNextLevel();
         }
     }
 
-    private bool UserInteraction() {
-        return
-            Input.touchCount > 0 &&
-            Input.GetTouch(0).phase == TouchPhase.Began &&
-            !EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
-    }
+	protected override bool CheckWinCondition()
+	{
+		throw new System.NotImplementedException();
+	}
 }
